@@ -12,9 +12,10 @@ const QuestionList = () => {
         { label: 'Ruby', value: 2 },
         { label: 'Rails', value: 3 },
         { label: 'React', value: 4 },
-        { label: 'JavaScript', value: 4 }
+        { label: 'JavaScript', value: 5 }
     ]
 
+    const [isShowAlert, setIsShowAlert] = useState(false)
     const [questionsList, setQuestionsList] = useState([])
     const [selectedOption, setSelectedOption] = useState(questionTags[0].value)
     const questionsUrl = 'http://localhost:3000/api/v1/questions'
@@ -24,6 +25,11 @@ const QuestionList = () => {
             .then((data) => {
                 console.log(data)
                 setQuestionsList(data)
+                if(data.length == 0) {
+                    setIsShowAlert(true)
+                } else {
+                    setIsShowAlert(false)
+                }
             })
     }
     useEffect(() => {
@@ -38,6 +44,11 @@ const QuestionList = () => {
             .then((data) => {
                 console.log(data)
                 setQuestionsList(data)
+                if(data.length == 0) {
+                    setIsShowAlert(true)
+                } else {
+                    setIsShowAlert(false)
+                }
             })
     }
     return(
@@ -52,7 +63,10 @@ const QuestionList = () => {
                 { questionsList.length > 0 ?
                     questionsList.map((question) =>
                             <QuestionDetail question={question} key={question.id}/>
-                ) : < EmptyQuestionMessage tagname={questionTags[selectedOption].label}/>
+                ) : ''
+                }
+                {
+                   isShowAlert && < EmptyQuestionMessage tagname={questionTags[selectedOption].label}/>
                 }
             </div>
         </div>
