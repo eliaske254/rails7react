@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import * as ReactDOM from 'react-dom'
 import QuestionDetail from "./QuestionDetail";
 import EmptyQuestionMessage from "./EmptyQuestionMessage";
+import Loader from "./Loader";
 
 const QuestionList = () => {
 
@@ -15,11 +16,13 @@ const QuestionList = () => {
         { label: 'JavaScript', value: 5 }
     ]
 
-    const [isShowAlert, setIsShowAlert] = useState(false)
+    const [isShowLoader, setIsShowLoader] = useState(false)
+    const [isShowAlert, setIsShowAlert] = useState(true)
     const [questionsList, setQuestionsList] = useState([])
     const [selectedOption, setSelectedOption] = useState(questionTags[0].value)
     const questionsUrl = 'http://localhost:3000/api/v1/questions'
     const fetchQuestionList = () => {
+        setIsShowLoader(false)
         fetch(questionsUrl)
             .then((response) => response.json())
             .then((data) => {
@@ -37,6 +40,8 @@ const QuestionList = () => {
     }, [])
 
     const updateSelectedItem = (event) => {
+        setIsShowLoader(false)
+        setIsShowAlert(false)
         setQuestionsList([])
         setSelectedOption(event.target.value)
         fetch(questionsUrl + `?tags=${questionTags[event.target.value].label}`)
@@ -46,8 +51,8 @@ const QuestionList = () => {
                 setQuestionsList(data)
                 if(data.length == 0) {
                     setIsShowAlert(true)
-                } else {
-                    setIsShowAlert(false)
+                    setIsShowLoader(true)
+
                 }
             })
     }
@@ -63,7 +68,7 @@ const QuestionList = () => {
                 { questionsList.length > 0 ?
                     questionsList.map((question) =>
                             <QuestionDetail question={question} key={question.id}/>
-                ) : ''
+                ) : <Loader isShowLoader={isShowLoader}/>
                 }
                 {
                    isShowAlert && < EmptyQuestionMessage tagname={questionTags[selectedOption].label}/>
