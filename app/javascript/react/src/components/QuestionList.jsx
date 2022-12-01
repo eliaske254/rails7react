@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom'
 import QuestionDetail from "./QuestionDetail";
 import EmptyQuestionMessage from "./EmptyQuestionMessage";
 import Loader from "./Loader";
+import NewQuestion from "./NewQuestion";
 
 const QuestionList = () => {
 
@@ -60,6 +61,9 @@ const QuestionList = () => {
         <div className="row">
             <div className="col-lg-10 mx-auto">
                 <p className="lead fw-bold">Filter Questions by Tags</p>
+                <button type="button" className="btn btn-primary mt-3 mb-3" data-toggle="modal" data-target="#exampleModal">
+                    Ask a question
+                </button>
                 <select className="form-select form-select-lg" value={selectedOption} onChange={event => updateSelectedItem(event)}>
                     {questionTags.map(tag => (
                         <option key={tag.value} value={tag.value}>{tag.label}</option>
@@ -74,6 +78,7 @@ const QuestionList = () => {
                    isShowAlert && < EmptyQuestionMessage tagname={questionTags[selectedOption].label}/>
                 }
             </div>
+            <NewQuestion />
         </div>
     )
 }
